@@ -1,0 +1,21 @@
+{% extends "monitoring/base.html" %}
+{% block title %}Devices | Network Monitor{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div><h2 class="fw-bold mb-1">Network devices</h2><p class="text-secondary mb-0">Manage devices you are authorized to monitor.</p></div>
+  <a class="btn btn-primary" href="{% url 'device_create' %}">+ Add device</a>
+</div>
+<div class="card sidebar-card p-3"><div class="table-responsive"><table class="table align-middle">
+<thead><tr><th>Name</th><th>IP address</th><th>Type</th><th>Status</th><th>Response</th><th>Actions</th></tr></thead>
+<tbody>{% for device in devices %}
+<tr>
+<td class="fw-semibold">{{ device.device_name }}</td><td>{{ device.ip_address }}</td><td>{{ device.device_type }}</td>
+<td>{{ device.status }}</td><td>{% if device.status == "Online" %}{{ device.response_time }} ms{% else %}—{% endif %}</td>
+<td><div class="d-flex flex-wrap gap-1">
+<form method="post" action="{% url 'check_device' device.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-success">Check</button></form>
+<a class="btn btn-sm btn-outline-primary" href="{% url 'device_update' device.pk %}">Edit</a>
+<a class="btn btn-sm btn-outline-danger" href="{% url 'device_delete' device.pk %}">Delete</a>
+</div></td></tr>
+{% empty %}<tr><td colspan="6" class="text-center text-secondary py-4">No devices added yet.</td></tr>{% endfor %}</tbody>
+</table></div></div>
+{% endblock %}

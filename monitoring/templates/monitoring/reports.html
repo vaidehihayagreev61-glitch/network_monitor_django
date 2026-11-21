@@ -1,0 +1,32 @@
+{% extends "monitoring/base.html" %}
+{% block title %}Reports | Network Monitor{% endblock %}
+{% block content %}
+<h2 class="fw-bold mb-1">Monitoring reports</h2>
+<p class="text-secondary mb-4">Recent response-time history from manual checks.</p>
+<div class="card sidebar-card p-3 mb-4"><canvas id="responseChart" height="100"></canvas></div>
+<div class="card sidebar-card p-3"><h5>Recent checks</h5><div class="table-responsive"><table class="table">
+<thead><tr><th>Device</th><th>Status</th><th>Response time</th><th>Checked at</th></tr></thead>
+<tbody>{% for record in records %}
+<tr><td>{{ record.device.device_name }}</td><td>{{ record.status }}</td><td>{{ record.response_time }} ms</td><td>{{ record.checked_at|date:"d M Y, H:i:s" }}</td></tr>
+{% empty %}<tr><td colspan="4" class="text-center text-secondary">No monitoring records yet. Run a device check first.</td></tr>{% endfor %}</tbody>
+</table></div></div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{ chart_labels|json_script:"chart-labels" }}
+{{ chart_values|json_script:"chart-values" }}
+<script>
+const labels = JSON.parse(document.getElementById("chart-labels").textContent);
+const values = JSON.parse(document.getElementById("chart-values").textContent);
+const canvas = document.getElementById("responseChart");
+if (window.Chart) {
+  new Chart(canvas, {
+    type: "line",
+    data: { labels, datasets: [{ label: "Response time (ms)", data: values, borderWidth: 2, tension: 0.25 }] },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+} else {
+  canvas.insertAdjacentHTML("afterend", "<p class='text-secondary'>Chart library unavailable. Use the table below.</p>");
+}
+</script>
+{% endblock %}

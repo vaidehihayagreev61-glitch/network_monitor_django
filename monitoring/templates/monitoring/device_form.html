@@ -1,0 +1,18 @@
+{% extends "monitoring/base.html" %}
+{% block title %}{{ page_title }} | Network Monitor{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-7">
+<div class="card sidebar-card p-4">
+<h2 class="fw-bold mb-3">{{ page_title }}</h2>
+<p class="text-secondary">Enter details for a device you own or have permission to monitor.</p>
+<form method="post">{% csrf_token %}
+  {% for field in form %}
+    <div class="mb-3"><label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}
+      {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+    </div>
+  {% endfor %}
+  <button class="btn btn-primary" type="submit">Save device</button>
+  <a class="btn btn-outline-secondary" href="{% url 'device_list' %}">Cancel</a>
+</form>
+</div></div></div>
+{% endblock %}

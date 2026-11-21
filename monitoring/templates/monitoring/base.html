@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}NetPulse{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f7fc;
+            color: #17243b;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .navbar {
+            background: #14233f;
+            min-height: 72px;
+            box-shadow: 0 4px 18px rgba(13,31,59,.12);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .nav-link {
+            color: #dce5f7 !important;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+        }
+
+        .page-wrap {
+            max-width: 1250px;
+        }
+
+        .sidebar-card, .stat-card {
+            background: white;
+            border: 1px solid #e8edf5;
+            border-radius: 18px;
+            box-shadow: 0 8px 28px rgba(29,52,89,.05);
+        }
+
+        .stat-card {
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(29,52,89,.10);
+        }
+
+        .btn-primary {
+            background: #3563e9;
+            border-color: #3563e9;
+        }
+
+        .btn-primary:hover {
+            background: #244fd0;
+        }
+
+        .footer {
+            color: #8995a8;
+            font-size: 13px;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .table thead th {
+            color: #78869b;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+        }
+
+        .table td, .table th {
+            padding: 15px 12px;
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container page-wrap">
+
+        <a class="navbar-brand" href="{% url 'dashboard' %}">
+            ◈ Net<span class="text-info">Pulse</span>
+        </a>
+
+        {% if user.is_authenticated %}
+
+        <div class="d-flex align-items-center flex-wrap gap-3">
+
+            <a class="nav-link" href="{% url 'dashboard' %}">
+                Overview
+            </a>
+
+            <a class="nav-link" href="{% url 'device_list' %}">
+                Devices
+            </a>
+
+            <a class="nav-link" href="{% url 'reports' %}">
+                Reports
+            </a>
+
+            <span class="text-white-50">
+                {{ user.username }}
+            </span>
+
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-light btn-sm rounded-pill px-3">
+                    Logout
+                </button>
+            </form>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+</nav>
+
+<main class="container page-wrap py-4 py-lg-5">
+
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+
+    <div class="footer">
+        © 2026 NetPulse | Network Monitoring System
+        <br>
+        Monitor • Analyze • Manage
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

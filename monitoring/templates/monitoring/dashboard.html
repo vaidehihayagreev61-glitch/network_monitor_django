@@ -1,0 +1,176 @@
+{% extends "monitoring/base.html" %}
+
+{% block title %}Dashboard | NetPulse{% endblock %}
+
+{% block content %}
+
+<!-- WELCOME SECTION -->
+
+<div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+
+    <div>
+        <p class="text-primary fw-bold mb-1">NETWORK CONTROL CENTER</p>
+
+        <h2 class="fw-bold">
+            Welcome, {{ user.username }}!
+        </h2>
+
+        <p class="text-secondary">
+            Monitor and manage your connected network devices.
+        </p>
+    </div>
+
+    <a href="{% url 'device_create' %}"
+       class="btn btn-primary rounded-pill px-4">
+        + Add New Device
+    </a>
+
+</div>
+
+
+<!-- STATISTICS CARDS -->
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card stat-card p-4">
+            <p class="text-secondary fw-semibold">TOTAL DEVICES</p>
+            <h1 class="fw-bold">{{ total }}</h1>
+            <span class="text-primary">Registered devices</span>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card stat-card p-4">
+            <p class="text-secondary fw-semibold">ONLINE DEVICES</p>
+            <h1 class="fw-bold text-success">{{ online }}</h1>
+            <span class="text-success">● Active devices</span>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card stat-card p-4">
+            <p class="text-secondary fw-semibold">OFFLINE DEVICES</p>
+            <h1 class="fw-bold text-danger">{{ offline }}</h1>
+            <span class="text-danger">● Not responding</span>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card stat-card p-4">
+            <p class="text-secondary fw-semibold">UNKNOWN STATUS</p>
+            <h1 class="fw-bold text-secondary">{{ unknown }}</h1>
+            <span class="text-secondary">Waiting for check</span>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- MAIN DASHBOARD CONTENT -->
+
+<div class="row g-4 mb-4">
+
+    <!-- DEVICE INVENTORY -->
+
+    <div class="col-lg-8">
+
+        <div class="card sidebar-card p-4 h-100">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <div>
+                    <h5 class="fw-bold">Network Device Inventory</h5>
+                    <p class="text-secondary small">
+                        Overview of registered devices
+                    </p>
+                </div>
+
+                <a href="{% url 'device_list' %}"
+                   class="text-primary text-decoration-none">
+                    View All →
+                </a>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Device Name</th>
+                            <th>IP Address</th>
+                            <th>Device Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {% for device in devices %}
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                {{ device.device_name }}
+                            </td>
+
+                            <td>
+                                {{ device.ip_address }}
+                            </td>
+
+                            <td>
+                                {{ device.device_type }}
+                            </td>
+
+                            <td>
+
+                                {% if device.status == "Online" %}
+
+                                    <span class="badge bg-success rounded-pill">
+                                        ● Online
+                                    </span>
+
+                                {% elif device.status == "Offline" %}
+
+                                    <span class="badge bg-danger rounded-pill">
+                                        ● Offline
+                                    </span>
+
+                                                                {% else %}
+
+                                    <span class="badge bg-secondary rounded-pill">
+                                        ● Unknown
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+                            <td colspan="4" class="text-center text-secondary py-4">
+                                No devices registered yet.
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

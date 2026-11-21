@@ -1,0 +1,10 @@
+{% extends "monitoring/base.html" %}
+{% block title %}Delete device | Network Monitor{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-6">
+<div class="card sidebar-card p-4">
+<h3>Delete device?</h3>
+<p>Are you sure you want to delete <strong>{{ device.device_name }}</strong> ({{ device.ip_address }})? Its monitoring history will also be deleted.</p>
+<form method="post">{% csrf_token %}<button class="btn btn-danger" type="submit">Yes, delete</button> <a class="btn btn-outline-secondary" href="{% url 'device_list' %}">Cancel</a></form>
+</div></div></div>
+{% endblock %}
